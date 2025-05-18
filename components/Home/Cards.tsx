@@ -14,9 +14,11 @@ import Card from './Card';
 interface ICards {
 	items: IScheduleItem[];
 	setScheduleItems: (key: IScheduleItem[] | any) => void;
+	title: string;
+	pagination: boolean
 }
 
-const Cards: React.FC<ICards> = ({ items, setScheduleItems }) => {
+const Cards: React.FC<ICards> = ({ items, setScheduleItems, title, pagination }) => {
 	const [page, setPage] = useState(1);
 	const [isLoading, setIsloading] = useState(false);
 	const maxPaginationPage = 100; // api doesn't provide total number of items or pages
@@ -37,7 +39,7 @@ const Cards: React.FC<ICards> = ({ items, setScheduleItems }) => {
 		<Section>
 			<InfoBlock>
 				<ContentContainer>
-					<Title>Last added shows</Title>
+					<Title>{title}</Title>
 				</ContentContainer>
 			</InfoBlock>
 			<CardsWrap>
@@ -49,6 +51,7 @@ const Cards: React.FC<ICards> = ({ items, setScheduleItems }) => {
 						handlePagin={handlePagin}
 						isLoading={isLoading}
 						maxPaginationPage={maxPaginationPage}
+						isNeed = {pagination}
 					/>
 					<CardsBlock>
 						{items.length > 0

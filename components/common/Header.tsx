@@ -6,9 +6,10 @@ import { Container } from './ContentContainer';
 
 const Header: React.FC = () => (
 	<HeaderWrap>
-		<Container>
-			<Link href={'/'}>TV Bland</Link>
-		</Container>
+		<ContainerStyled>
+			<StyledLink href="/">TV Bland</StyledLink>
+			<StyledLink href="/last-viewed">Last Viewed Shows</StyledLink>
+		</ContainerStyled>
 	</HeaderWrap>
 );
 
@@ -25,6 +26,22 @@ const HeaderWrap = styled.header`
 	}
 	@media (max-width: 767px) {
 		padding: 15px 0;
+	}
+`;
+
+const ContainerStyled = styled(Container)`
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+const StyledLink = styled(Link)`
+	color: ${({ theme }) => theme.colors.Black};
+	text-decoration: none;
+	transition: opacity 0.2s ease;
+
+	&:hover {
+		opacity: 0.7;
 	}
 `;
 

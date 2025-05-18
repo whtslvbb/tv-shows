@@ -24,7 +24,7 @@ const Home: React.FC<{ items: IScheduleItem[] }> = ({ items }) => {
 					</ContentContainer>
 				</Wrap>
 			</Section>
-			<Cards items={scheduleItems} setScheduleItems={setScheduleItems} />
+			<Cards items={scheduleItems} setScheduleItems={setScheduleItems} title='Last added shows' pagination={true} />
 		</>
 	);
 };

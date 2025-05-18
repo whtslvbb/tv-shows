@@ -8,6 +8,7 @@ interface Props {
 	setCurrentPage: (currentPage: number) => void;
 	handlePagin: (currentPage: number) => void;
 	isLoading: boolean;
+	isNeed: boolean;
 }
 
 const Pagination: React.FC<Props> = ({
@@ -16,6 +17,7 @@ const Pagination: React.FC<Props> = ({
 	setCurrentPage,
 	handlePagin,
 	isLoading,
+	isNeed,
 }) => {
 	const firstRef = useRef(null);
 	const lastRef = useRef(null);
@@ -52,72 +54,88 @@ const Pagination: React.FC<Props> = ({
 			handlePagin(page);
 		}
 	};
-
-	return (
-		<PaginationStyled>
-			<ArrowBox>
-				{isLoading ? (
-					<LoadingBox>
-						<LoaderDots />
-					</LoadingBox>
-				) : (
-					<ArrowsWrap>
-						<ArrowLeft isActive={isLeftArrowActive} onClick={handleArrowLeftClick} />
-					</ArrowsWrap>
-				)}
-			</ArrowBox>
-			<Wrap>
-				{currentPage !== 1 && (
-					<>
+	if (isNeed) {
+		return (
+			<PaginationStyled>
+				<ArrowBox>
+					{isLoading ? (
+						<LoadingBox>
+							<LoaderDots />
+						</LoadingBox>
+					) : (
+						<ArrowsWrap>
+							<ArrowLeft
+								isActive={isLeftArrowActive}
+								onClick={handleArrowLeftClick}
+							/>
+						</ArrowsWrap>
+					)}
+				</ArrowBox>
+				<Wrap>
+					{currentPage !== 1 && (
+						<>
+							<PaginItem isDisabled={isLoading}>
+								<Text ref={firstRef} onClick={() => handleEdgePaginClick(firstRef)}>
+									1
+								</Text>
+							</PaginItem>
+							{currentPage > 3 && <Text>...</Text>}
+						</>
+					)}
+					{currentPage > 2 && (
 						<PaginItem isDisabled={isLoading}>
-							<Text ref={firstRef} onClick={() => handleEdgePaginClick(firstRef)}>
-								1
+							<Text
+								ref={prevFirstRef}
+								onClick={() => handleEdgePaginClick(prevFirstRef)}
+							>
+								{currentPage - 1}
 							</Text>
 						</PaginItem>
-						{currentPage > 3 && <Text>...</Text>}
-					</>
-				)}
-				{currentPage > 2 && (
-					<PaginItem isDisabled={isLoading}>
-						<Text ref={prevFirstRef} onClick={() => handleEdgePaginClick(prevFirstRef)}>
-							{currentPage - 1}
-						</Text>
+					)}
+					<PaginItem isDisabled isActive>
+						<Text>{currentPage}</Text>
 					</PaginItem>
-				)}
-				<PaginItem isDisabled isActive>
-					<Text>{currentPage}</Text>
-				</PaginItem>
-				{currentPage < maxPaginationPage - 1 && (
-					<PaginItem isDisabled={isLoading}>
-						<Text ref={prevLastRef} onClick={() => handleEdgePaginClick(prevLastRef)}>
-							{currentPage + 1}
-						</Text>
-					</PaginItem>
-				)}
-				{currentPage !== maxPaginationPage && (
-					<>
-						{currentPage < maxPaginationPage - 2 && <Text>...</Text>}
+					{currentPage < maxPaginationPage - 1 && (
 						<PaginItem isDisabled={isLoading}>
-							<Text ref={lastRef} onClick={() => handleEdgePaginClick(lastRef)}>
-								{maxPaginationPage}
+							<Text
+								ref={prevLastRef}
+								onClick={() => handleEdgePaginClick(prevLastRef)}
+							>
+								{currentPage + 1}
 							</Text>
 						</PaginItem>
-					</>
-				)}
-			</Wrap>
-			<ArrowBox>
-				{isLoading ? (
-					<LoadingBox>
-						<LoaderDots />
-					</LoadingBox>
-				) : (
-					<ArrowsWrap>
-						<ArrowRight isActive={isRightArrowActive} onClick={handleArrowRightClick} />
-					</ArrowsWrap>
-				)}
-			</ArrowBox>
-		</PaginationStyled>
-	);
+					)}
+					{currentPage !== maxPaginationPage && (
+						<>
+							{currentPage < maxPaginationPage - 2 && <Text>...</Text>}
+							<PaginItem isDisabled={isLoading}>
+								<Text ref={lastRef} onClick={() => handleEdgePaginClick(lastRef)}>
+									{maxPaginationPage}
+								</Text>
+							</PaginItem>
+						</>
+					)}
+				</Wrap>
+				<ArrowBox>
+					{isLoading ? (
+						<LoadingBox>
+							<LoaderDots />
+						</LoadingBox>
+					) : (
+						<ArrowsWrap>
+							<ArrowRight
+								isActive={isRightArrowActive}
+								onClick={handleArrowRightClick}
+							/>
+						</ArrowsWrap>
+					)}
+				</ArrowBox>
+			</PaginationStyled>
+		);
+	}
+	return(
+		<></>
+	)
 };
 
 const ArrowsWrap = styled.div`

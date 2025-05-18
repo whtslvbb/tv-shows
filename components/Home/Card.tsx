@@ -10,20 +10,39 @@ import DefaultImage from '../common/DefaultImage';
 import MarkdownComponent from '../common/MarkdownComponent';
 import Stars from '../common/Stars';
 
-const Card: React.FC<{ item: IScheduleItem }> = ({ item: { show } }) => {
+const Card: React.FC<{ item: IScheduleItem }> = ({ item }) => {
+	const handleSaveToLastViewed = () => {
+		const storageKey = 'lastViewedShows';
+		const maxStored = 10;
+
+		try {
+			const stored = JSON.parse(localStorage.getItem(storageKey) || '[]') as IScheduleItem[];
+
+			// Remove duplicates by show ID
+			const filtered = stored.filter((i) => i.show.id !== item.show.id);
+
+			// Add new item to the top
+			const updated = [item, ...filtered].slice(0, maxStored);
+
+			localStorage.setItem(storageKey, JSON.stringify(updated));
+		} catch (error) {
+			console.error('Failed to update last viewed shows:', error);
+		}
+	};
+
 	return (
 		<Wrap>
-			<Link href={`/shows/${show.id}`}>
+			<Link href={`/shows/${item.show.id}`} onClick={handleSaveToLastViewed}>
 				<ImageBlock>
-					{show.image?.medium ? (
+					{item.show.image?.medium ? (
 						<Image
 							loader={imageLoader}
-							src={show.image.medium}
-							alt={show.name}
+							src={item.show.image.medium}
+							alt={item.show.name}
 							objectFit='cover'
 							layout='fill'
 							blurDataURL={imageLoader({
-								src: show.image.medium,
+								src: item.show.image.medium,
 								quality: 15,
 							})}
 							placeholder='blur'
@@ -34,11 +53,11 @@ const Card: React.FC<{ item: IScheduleItem }> = ({ item: { show } }) => {
 				</ImageBlock>
 				<InfoBlock>
 					<Rating>
-						<Stars size='10' rating={show.rating.average || 0} />
+						<Stars size='10' rating={item.show.rating.average || 0} />
 					</Rating>
-					<Title data-testid={`item-title-${show.id}`}>{show.name}</Title>
+					<Title data-testid={`item-title-${item.show.id}`}>{item.show.name}</Title>
 					<Summary>
-						<MarkdownComponent data={show.summary} isEllipsis />
+						<MarkdownComponent data={item.show.summary} isEllipsis />
 					</Summary>
 				</InfoBlock>
 			</Link>
@@ -92,10 +111,12 @@ const InfoBlock = styled.div`
 const Rating = styled.div`
 	margin: 0 0 10px 0;
 `;
+
 const Title = styled.h3`
 	flex: 1;
 	margin-bottom: 10px;
 `;
+
 const Summary = styled.div`
 	flex: 1;
 `;
